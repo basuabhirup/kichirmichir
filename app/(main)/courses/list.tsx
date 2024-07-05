@@ -1,11 +1,11 @@
 "use client";
 
-import { courses } from "@/db/schema";
+import { courses, userProgress } from "@/db/schema";
 import Card from "./card";
 
 interface Props {
   courses: (typeof courses.$inferSelect)[];
-  activeCourseId: number;
+  activeCourseId?: typeof userProgress.$inferSelect.activeCourseId;
 }
 
 const List: React.FC<Props> = ({ courses, activeCourseId }) => {
