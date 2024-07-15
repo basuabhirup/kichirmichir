@@ -6,9 +6,7 @@ import { getUserProgress } from "@/db/queries";
 import { redirect } from "next/navigation";
 
 const LearnPage = async () => {
-  const userProgressData = getUserProgress();
-
-  const [userProgress] = await Promise.all([userProgressData]);
+  const userProgress = await getUserProgress();
 
   if (!userProgress || !userProgress.activeCourse) {
     redirect("/courses");
