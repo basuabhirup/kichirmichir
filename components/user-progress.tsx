@@ -3,12 +3,10 @@ import React from "react";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { InfinityIcon } from "lucide-react";
+import { courses } from "@/db/schema";
 
 interface Props {
-  activeCourse: {
-    imgSrc: string;
-    title: string;
-  };
+  activeCourse: typeof courses.$inferSelect
   hearts: number;
   points: number;
   hasActiveSubscription: boolean;
@@ -20,7 +18,7 @@ const UserProgress: React.FC<Props> = ({ activeCourse, hearts, points, hasActive
       <Link href="/courses">
         <Button variant="ghost">
           <Image
-            src={activeCourse.imgSrc}
+            src={activeCourse.imageSrc}
             alt={activeCourse.title}
             className="rounded-md border"
             width={32}
