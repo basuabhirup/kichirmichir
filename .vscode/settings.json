@@ -1,0 +1,5 @@
+{
+    "prettier.requireConfig": false,
+    "prettier.semi": false,
+    "prettier.printWidth": 80
+}
