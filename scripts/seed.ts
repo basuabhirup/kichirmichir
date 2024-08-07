@@ -95,7 +95,7 @@ export const main = async () => {
         id: 1,
         lessonId: 1,
         type: "SELECT",
-        question: `Which one of these is "the man"`,
+        question: `Which one of these is "the man"?`,
         order: 1,
       },
     ]);
