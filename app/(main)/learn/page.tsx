@@ -2,15 +2,22 @@ import FeedWrapper from "@/components/feed-wrapper"
 import StickyWrapper from "@/components/sticky-wrapper"
 import Header from "./header"
 import UserProgress from "@/components/user-progress"
-import { getUnits, getUserProgress } from "@/db/queries"
+import {
+  getCourseProgress,
+  getLessonPercentage,
+  getUnits,
+  getUserProgress,
+} from "@/db/queries"
 import { redirect } from "next/navigation"
 import { Unit } from "./unit"
 
 const LearnPage = async () => {
   const userProgress = await getUserProgress()
-  const unitsData = await getUnits()
+  const units = await getUnits()
+  const courseProgress = await getCourseProgress()
+  const lessonPercentage = await getLessonPercentage()
 
-  if (!userProgress || !userProgress.activeCourse) {
+  if (!userProgress || !userProgress.activeCourse || !courseProgress) {
     redirect("/courses")
   }
 
@@ -26,7 +33,7 @@ const LearnPage = async () => {
       </StickyWrapper>
       <FeedWrapper>
         <Header title={userProgress.activeCourse.title} />
-        {unitsData.map((unit) => (
+        {units.map((unit) => (
           <div key={unit.id} className="mb-10">
             <Unit
               id={unit.id}
@@ -34,8 +41,8 @@ const LearnPage = async () => {
               description={unit.description}
               title={unit.title}
               lessons={unit.lessons}
-              activeLesson={undefined}
-              activeLessonPercantage={0}
+              activeLesson={courseProgress.activeLesson}
+              activeLessonPercantage={lessonPercentage}
             />
           </div>
         ))}
