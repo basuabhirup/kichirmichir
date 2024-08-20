@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Header } from "./header"
 import { QuestionBubble } from "./question-bubble"
 import { Challenge } from "./challenge"
+import { Footer } from "./footer"
 
 interface IProps {
   initialPercentage: number
@@ -80,6 +81,11 @@ export const Quiz: React.FC<IProps> = ({
             </div>
           </div>
         </div>
+        <Footer
+          disabled={!selectedOption}
+          status={status}
+          onCheck={() => {}}
+        />
       </div>
     </>
   )
