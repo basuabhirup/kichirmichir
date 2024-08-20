@@ -35,8 +35,17 @@ export const Quiz: React.FC<IProps> = ({
     return uncompletedIndex === -1 ? 0 : uncompletedIndex
   })
 
+  const [selectedOption, setSelectedOption] = useState<number>()
+  const [status, setStatus] = useState<"correct" | "none" | "wrong">("none")
+
   const challenge = challenges[activeIndex]
   const options = challenge.challengeOptions ?? []
+
+  const onSelect = (id: number) => {
+    if (status !== "none") return
+
+    setSelectedOption(id)
+  }
 
   const title =
     challenge.type === "ASSIST"
@@ -62,9 +71,9 @@ export const Quiz: React.FC<IProps> = ({
               )}
               <Challenge
                 options={options}
-                onSelect={() => {}}
-                status="none"
-                selectedOption={undefined}
+                onSelect={onSelect}
+                status={status}
+                selectedOption={selectedOption}
                 disabled={false}
                 type={challenge.type}
               />
