@@ -1,23 +1,23 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless"
+import { drizzle } from "drizzle-orm/neon-http"
 
-import * as schema from "@/db/schema";
-import "dotenv/config";
+import * as schema from "@/db/schema"
+import "dotenv/config"
 
-const sql = neon(process.env.DATABASE_URL!);
-const db = drizzle(sql, { schema });
+const sql = neon(process.env.DATABASE_URL!)
+const db = drizzle(sql, { schema })
 
 export const main = async () => {
   try {
-    console.log("Seeding Database");
+    console.log("Seeding Database")
 
-    await db.delete(schema.courses);
-    await db.delete(schema.userProgress);
-    await db.delete(schema.units);
-    await db.delete(schema.lessons);
-    await db.delete(schema.challenges);
-    await db.delete(schema.challengeOptions);
-    await db.delete(schema.challengeProgress);
+    await db.delete(schema.courses)
+    await db.delete(schema.userProgress)
+    await db.delete(schema.units)
+    await db.delete(schema.lessons)
+    await db.delete(schema.challenges)
+    await db.delete(schema.challengeOptions)
+    await db.delete(schema.challengeProgress)
 
     await db.insert(schema.courses).values([
       {
@@ -45,7 +45,7 @@ export const main = async () => {
         title: "Japanese",
         imageSrc: "/jp.svg",
       },
-    ]);
+    ])
 
     await db.insert(schema.units).values([
       {
@@ -55,7 +55,7 @@ export const main = async () => {
         description: "Learn the basics of Spanish",
         order: 1,
       },
-    ]);
+    ])
 
     await db.insert(schema.lessons).values([
       {
@@ -88,7 +88,7 @@ export const main = async () => {
         title: "Verbs",
         order: 5,
       },
-    ]);
+    ])
 
     await db.insert(schema.challenges).values([
       {
@@ -98,11 +98,25 @@ export const main = async () => {
         question: `Which one of these is "the man"?`,
         order: 1,
       },
-    ]);
+      {
+        id: 2,
+        lessonId: 1,
+        type: "ASSIST",
+        question: `"the man"`,
+        order: 2,
+      },
+
+      {
+        id: 3,
+        lessonId: 1,
+        type: "SELECT",
+        question: `Which one of these is "the robot"?`,
+        order: 3,
+      },
+    ])
 
     await db.insert(schema.challengeOptions).values([
       {
-        id: 1,
         challengeId: 1,
         imageSrc: "/man.svg",
         correct: true,
@@ -110,7 +124,6 @@ export const main = async () => {
         audioSrc: "/es_man.mp3",
       },
       {
-        id: 2,
         challengeId: 1,
         imageSrc: "/woman.svg",
         correct: false,
@@ -118,19 +131,63 @@ export const main = async () => {
         audioSrc: "/es_woman.mp3",
       },
       {
-        id: 3,
         challengeId: 1,
         imageSrc: "/robot.svg",
         correct: false,
         text: "el robot",
         audioSrc: "/es_robot.mp3",
       },
-    ]);
+    ])
 
-    console.log("Seeding finished");
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 2,
+        correct: true,
+        text: "el hombre",
+        audioSrc: "/es_man.mp3",
+      },
+      {
+        challengeId: 2,
+        correct: false,
+        text: "la mujer",
+        audioSrc: "/es_woman.mp3",
+      },
+      {
+        challengeId: 2,
+        correct: false,
+        text: "el robot",
+        audioSrc: "/es_robot.mp3",
+      },
+    ])
+
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 3,
+        imageSrc: "/man.svg",
+        correct: false,
+        text: "el hombre",
+        audioSrc: "/es_man.mp3",
+      },
+      {
+        challengeId: 3,
+        imageSrc: "/woman.svg",
+        correct: false,
+        text: "la mujer",
+        audioSrc: "/es_woman.mp3",
+      },
+      {
+        challengeId: 3,
+        imageSrc: "/robot.svg",
+        correct: true,
+        text: "el robot",
+        audioSrc: "/es_robot.mp3",
+      },
+    ])
+
+    console.log("Seeding finished")
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-};
+}
 
-main();
+main()

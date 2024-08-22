@@ -1,11 +1,13 @@
 "use client"
 
 import { challengeOptions, challenges } from "@/db/schema"
-import { useState } from "react"
+import { startTransition, useState, useTransition } from "react"
 import { Header } from "./header"
 import { QuestionBubble } from "./question-bubble"
 import { Challenge } from "./challenge"
 import { Footer } from "./footer"
+import { upsertChallengeProgress } from "@/actions/challenge-progress"
+import { toast } from "sonner"
 
 interface IProps {
   initialPercentage: number
@@ -25,6 +27,7 @@ export const Quiz: React.FC<IProps> = ({
   initialLessonId,
   userSubscription,
 }) => {
+  const [pending, isTransition] = useTransition()
   const [hearts, setHearts] = useState<number>(initialHearts)
   const [percentage, setPercentage] = useState<number>(initialPercentage)
   const [challenges, setChallenges] = useState(initialLessonChallenges)
@@ -42,10 +45,58 @@ export const Quiz: React.FC<IProps> = ({
   const challenge = challenges[activeIndex]
   const options = challenge.challengeOptions ?? []
 
+  const onNext = () => {
+    setActiveIndex((prevIndex) => prevIndex + 1)
+  }
+
   const onSelect = (id: number) => {
     if (status !== "none") return
 
     setSelectedOption(id)
+  }
+
+  const onContinue = () => {
+    if (!selectedOption) return
+
+    if (status === "wrong") {
+      setStatus("none")
+      setSelectedOption(undefined)
+      return
+    }
+
+    if (status === "correct") {
+      onNext()
+      setStatus("none")
+      setSelectedOption(undefined)
+      return
+    }
+
+    const correctOption = options.find((option) => option.correct)
+
+    if (!correctOption) {
+      return
+    }
+
+    if (correctOption.id === selectedOption) {
+      startTransition(() => {
+        upsertChallengeProgress(challenge.id)
+          .then((res) => {
+            if (res?.error === "hearts") {
+              console.error("Missing Hearts")
+              return
+            }
+            setStatus("correct")
+            setPercentage((prev) => prev + 100 / challenges.length)
+            if (initialPercentage === 100) {
+              // This is a practice
+              setHearts((prev) => Math.min(prev + 1, 5))
+            }
+          })
+          .catch(() => toast.error("Oops! Something went wrong"))
+      })
+    } else {
+      console.log("Incorrect option!")
+    }
   }
 
   const title =
@@ -60,7 +111,7 @@ export const Quiz: React.FC<IProps> = ({
         percentage={percentage}
         hasActiveSubscription={!!userSubscription?.isActive}
       />
-      <div className="flex-1">
+      <div className="flex-1 mb-[105px] lg:mb-[145px]">
         <div className="h-full flex items-center justify-center">
           <div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
             <h1 className="text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
@@ -84,7 +135,7 @@ export const Quiz: React.FC<IProps> = ({
         <Footer
           disabled={!selectedOption}
           status={status}
-          onCheck={() => {}}
+          onCheck={onContinue}
         />
       </div>
     </>
