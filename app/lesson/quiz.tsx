@@ -8,6 +8,7 @@ import { Challenge } from "./challenge"
 import { Footer } from "./footer"
 import { upsertChallengeProgress } from "@/actions/challenge-progress"
 import { toast } from "sonner"
+import { reduceHearts } from "@/actions/user-progress"
 
 interface IProps {
   initialPercentage: number
@@ -95,7 +96,22 @@ export const Quiz: React.FC<IProps> = ({
           .catch(() => toast.error("Oops! Something went wrong"))
       })
     } else {
-      console.log("Incorrect option!")
+      startTransition(() => {
+        reduceHearts(challenge.id)
+          .then((res) => {
+            if (res?.error === "hearts") {
+              console.error("Missing hearts")
+              return
+            }
+            setStatus("wrong")
+
+            if (!res?.error) {
+              // This is not practice
+              setHearts((prev) => Math.max(prev - 1, 0))
+            }
+          })
+          .catch(() => toast.error("Oops! Something went wrong"))
+      })
     }
   }
 
@@ -126,14 +142,14 @@ export const Quiz: React.FC<IProps> = ({
                 onSelect={onSelect}
                 status={status}
                 selectedOption={selectedOption}
-                disabled={false}
+                disabled={pending}
                 type={challenge.type}
               />
             </div>
           </div>
         </div>
         <Footer
-          disabled={!selectedOption}
+          disabled={pending || !selectedOption}
           status={status}
           onCheck={onContinue}
         />
