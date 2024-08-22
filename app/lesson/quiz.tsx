@@ -9,6 +9,7 @@ import { Footer } from "./footer"
 import { upsertChallengeProgress } from "@/actions/challenge-progress"
 import { toast } from "sonner"
 import { reduceHearts } from "@/actions/user-progress"
+import { useAudio } from "react-use"
 
 interface IProps {
   initialPercentage: number
@@ -28,6 +29,10 @@ export const Quiz: React.FC<IProps> = ({
   initialLessonId,
   userSubscription,
 }) => {
+  const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" })
+  const [incorrectAudio, _i, incorrectControls] = useAudio({
+    src: "/incorrect.wav",
+  })
   const [pending, isTransition] = useTransition()
   const [hearts, setHearts] = useState<number>(initialHearts)
   const [percentage, setPercentage] = useState<number>(initialPercentage)
@@ -86,6 +91,7 @@ export const Quiz: React.FC<IProps> = ({
               console.error("Missing Hearts")
               return
             }
+            correctControls.play()
             setStatus("correct")
             setPercentage((prev) => prev + 100 / challenges.length)
             if (initialPercentage === 100) {
@@ -103,10 +109,11 @@ export const Quiz: React.FC<IProps> = ({
               console.error("Missing hearts")
               return
             }
+            incorrectControls.play()
             setStatus("wrong")
 
             if (!res?.error) {
-              // This is not practice
+              // This is not a practice
               setHearts((prev) => Math.max(prev - 1, 0))
             }
           })
@@ -122,6 +129,8 @@ export const Quiz: React.FC<IProps> = ({
 
   return (
     <>
+      {correctAudio}
+      {incorrectAudio}
       <Header
         hearts={hearts}
         percentage={percentage}
