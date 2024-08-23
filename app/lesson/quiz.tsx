@@ -12,6 +12,7 @@ import { reduceHearts } from "@/actions/user-progress"
 import { useAudio } from "react-use"
 import Image from "next/image"
 import { ResultCard } from "./result-card"
+import { useRouter } from "next/navigation"
 
 interface IProps {
   initialPercentage: number
@@ -31,11 +32,13 @@ export const Quiz: React.FC<IProps> = ({
   initialLessonId,
   userSubscription,
 }) => {
+  const router = useRouter()
   const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" })
   const [incorrectAudio, _i, incorrectControls] = useAudio({
     src: "/incorrect.wav",
   })
   const [pending, isTransition] = useTransition()
+  const [lessonId] = useState<number>(initialLessonId)
   const [hearts, setHearts] = useState<number>(initialHearts)
   const [percentage, setPercentage] = useState<number>(initialPercentage)
   const [challenges, setChallenges] = useState(initialLessonChallenges)
@@ -124,10 +127,10 @@ export const Quiz: React.FC<IProps> = ({
     }
   }
 
-  if (!challenge) {
+  if (true || !challenge) {
     return (
       <>
-        <div className="flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center h-full">
+        <div className="flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center h-full mb-[105px] lg:mb-[145px]">
           <Image
             src="/finish.svg"
             alt="Finish"
@@ -150,6 +153,11 @@ export const Quiz: React.FC<IProps> = ({
             <ResultCard variant="hearts" value={hearts} />
           </div>
         </div>
+        <Footer
+          lessonId={lessonId}
+          status="completed"
+          onCheck={() => router.push("/learn")}
+        />
       </>
     )
   }
