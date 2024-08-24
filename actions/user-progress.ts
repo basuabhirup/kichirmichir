@@ -92,7 +92,7 @@ export const reduceHearts = async (challengeId: number) => {
   }
 
   if (currentUserProgress.hearts === 0) {
-    return { error: "practice" }
+    return { error: "hearts" }
   }
 
   await db

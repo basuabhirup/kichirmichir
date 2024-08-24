@@ -14,6 +14,7 @@ import Image from "next/image"
 import { ResultCard } from "./result-card"
 import { useRouter } from "next/navigation"
 import Confetti from "react-confetti"
+import { useHeartsModal } from "@/store/use-hearts-modal"
 
 interface IProps {
   initialPercentage: number
@@ -33,6 +34,7 @@ export const Quiz: React.FC<IProps> = ({
   initialLessonId,
   userSubscription,
 }) => {
+  const { open: openHeartsModal } = useHeartsModal()
   const { width, height } = useWindowSize()
   const router = useRouter()
   const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" })
@@ -96,7 +98,7 @@ export const Quiz: React.FC<IProps> = ({
         upsertChallengeProgress(challenge.id)
           .then((res) => {
             if (res?.error === "hearts") {
-              console.error("Missing Hearts")
+              openHeartsModal()
               return
             }
             correctControls.play()
@@ -114,7 +116,7 @@ export const Quiz: React.FC<IProps> = ({
         reduceHearts(challenge.id)
           .then((res) => {
             if (res?.error === "hearts") {
-              console.error("Missing hearts")
+              openHeartsModal()
               return
             }
             incorrectControls.play()
