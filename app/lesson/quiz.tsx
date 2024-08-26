@@ -1,7 +1,7 @@
 "use client"
 
 import { challengeOptions, challenges } from "@/db/schema"
-import { startTransition, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { Header } from "./header"
 import { QuestionBubble } from "./question-bubble"
 import { Challenge } from "./challenge"
@@ -51,7 +51,7 @@ export const Quiz: React.FC<IProps> = ({
     src: "/incorrect.wav",
   })
   const [finishAudio] = useAudio({ src: "/finish.mp3", autoPlay: true })
-  const [pending, isTransition] = useTransition()
+  const [pending, startTransition] = useTransition()
   const [lessonId] = useState<number>(initialLessonId)
   const [hearts, setHearts] = useState<number>(initialHearts)
   const [percentage, setPercentage] = useState<number>(() =>
@@ -83,7 +83,7 @@ export const Quiz: React.FC<IProps> = ({
   }
 
   const onContinue = () => {
-    if (!selectedOption) return
+    if (!selectedOption || pending) return
 
     if (status === "wrong") {
       setStatus("none")
