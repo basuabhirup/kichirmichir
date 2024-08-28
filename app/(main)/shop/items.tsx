@@ -36,7 +36,7 @@ export const Items: React.FC<IProps> = ({
         <Image src="/heart.svg" alt="Heart" width={60} height={60} />
         <div className="flex-1">
           <p className="text-neutral-700 text-base lg:text-xl font-bold">
-            Refill Hearts
+            Refill 1 Heart
           </p>
         </div>
         <Button

@@ -10,6 +10,7 @@ import {
 } from "@/db/queries"
 import { redirect } from "next/navigation"
 import { Unit } from "./unit"
+import { Quests } from "@/components/quests"
 
 const LearnPage = async () => {
   const userProgress = await getUserProgress()
@@ -30,6 +31,7 @@ const LearnPage = async () => {
           points={userProgress.points}
           hasActiveSubscription={false}
         />
+        <Quests points={userProgress.points} />
       </StickyWrapper>
       <FeedWrapper>
         <Header title={userProgress.activeCourse.title} />
