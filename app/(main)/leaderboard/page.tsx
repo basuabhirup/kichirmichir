@@ -39,7 +39,7 @@ const LeaderboardPage = async () => {
             Leaderboard
           </h1>
           <p className="text-muted-foreground text-center text-lg mb-6">
-            See where you stand among other learners in the community
+            See where you stand among other learners in the community.
           </p>
           <Separator className="mb-4 h-0.5 rounded-full" />
           {topTenUsers.map((userProgress, index) => (
