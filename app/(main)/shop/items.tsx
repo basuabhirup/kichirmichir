@@ -2,11 +2,10 @@
 
 import { refillHearts } from "@/actions/user-progress"
 import { Button } from "@/components/ui/button"
+import { POINTS_TO_REFILL } from "@/utils/constants"
 import Image from "next/image"
 import { useTransition } from "react"
 import { toast } from "sonner"
-
-const POINTS_TO_REFILL = 10
 
 interface IProps {
   hearts: number
