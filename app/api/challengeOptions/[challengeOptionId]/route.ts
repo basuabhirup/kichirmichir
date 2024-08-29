@@ -1,19 +1,19 @@
 import db from "@/db/drizzle"
-import { challenges } from "@/db/schema"
+import { challengeOptions } from "@/db/schema"
 import { isAdmin } from "@/lib/admin"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 
 export const GET = async (
   req: Request,
-  { params }: { params: { challengeId: number } }
+  { params }: { params: { challengeOptionId: number } }
 ) => {
   if (!isAdmin()) {
     return new NextResponse("Unauthorized", { status: 401 })
   }
 
-  const data = await db.query.challenges.findFirst({
-    where: eq(challenges.id, params.challengeId),
+  const data = await db.query.challengeOptions.findFirst({
+    where: eq(challengeOptions.id, params.challengeOptionId),
   })
 
   return NextResponse.json(data)
@@ -21,7 +21,7 @@ export const GET = async (
 
 export const PUT = async (
   req: Request,
-  { params }: { params: { challengeId: number } }
+  { params }: { params: { challengeOptionId: number } }
 ) => {
   if (!isAdmin()) {
     return new NextResponse("Unauthorized", { status: 401 })
@@ -29,11 +29,11 @@ export const PUT = async (
   const body = await req.json()
 
   const data = await db
-    .update(challenges)
+    .update(challengeOptions)
     .set({
       ...body,
     })
-    .where(eq(challenges.id, params.challengeId))
+    .where(eq(challengeOptions.id, params.challengeOptionId))
     .returning()
 
   return NextResponse.json(data[0])
@@ -41,15 +41,15 @@ export const PUT = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { challengeId: number } }
+  { params }: { params: { challengeOptionId: number } }
 ) => {
   if (!isAdmin()) {
     return new NextResponse("Unauthorized", { status: 401 })
   }
 
   const data = await db
-    .delete(challenges)
-    .where(eq(challenges.id, params.challengeId))
+    .delete(challengeOptions)
+    .where(eq(challengeOptions.id, params.challengeOptionId))
     .returning()
 
   return NextResponse.json(data[0])
