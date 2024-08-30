@@ -4,12 +4,6 @@
 
 This project is a clone of the popular language-learning app Duolingo, built with cutting-edge technologies to create a seamless and intuitive user experience.
 
-## Demo:
-
-#### Live URL: https://dub.sh/kichirmichir-app
-
-#### Demo Video: http://www.youtube.com/watch?v=eG07ISE_TDc
-
 https://github.com/user-attachments/assets/c2328f45-33b3-4fc7-8900-ef65a6172b17
 
 ## 🚀 Features
