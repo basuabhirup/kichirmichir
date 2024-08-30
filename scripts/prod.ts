@@ -25,10 +25,15 @@ const main = async () => {
     // Insert courses
     const courses = await db
       .insert(schema.courses)
-      .values([{ title: "Spanish", imageSrc: "/es.svg" }])
+      .values([
+        { id: 1, title: "Spanish", imageSrc: "/es.svg" },
+        { id: 2, title: "Italian", imageSrc: "/it.svg" },
+        { id: 3, title: "French", imageSrc: "/fr.svg" },
+        { id: 4, title: "Croatian", imageSrc: "/hr.svg" },
+        { id: 5, title: "Japanese", imageSrc: "/jp.svg" },
+      ])
       .returning()
 
-    // For each course, insert units
     for (const course of courses) {
       const units = await db
         .insert(schema.units)
@@ -48,7 +53,6 @@ const main = async () => {
         ])
         .returning()
 
-      // For each unit, insert lessons
       for (const unit of units) {
         const lessons = await db
           .insert(schema.lessons)
@@ -61,7 +65,6 @@ const main = async () => {
           ])
           .returning()
 
-        // For each lesson, insert challenges
         for (const lesson of lessons) {
           const challenges = await db
             .insert(schema.challenges)
@@ -69,78 +72,80 @@ const main = async () => {
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "the man"?',
+                question: `Which one of these is "the man"?`,
                 order: 1,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "the woman"?',
+                question: `Which one of these is "the woman"?`,
                 order: 2,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "the boy"?',
+                question: `Which one of these is "the boy"?`,
                 order: 3,
               },
               {
                 lessonId: lesson.id,
                 type: "ASSIST",
-                question: '"the man"',
+                question: `"the man"`,
                 order: 4,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "the zombie"?',
+                question: `Which one of these is "the zombie"?`,
                 order: 5,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "the robot"?',
+                question: `Which one of these is "the robot"?`,
                 order: 6,
               },
               {
                 lessonId: lesson.id,
                 type: "SELECT",
-                question: 'Which one of these is "the girl"?',
+                question: `Which one of these is "the girl"?`,
                 order: 7,
               },
               {
                 lessonId: lesson.id,
                 type: "ASSIST",
-                question: '"the zombie"',
+                question: `"the zombie"`,
                 order: 8,
               },
             ])
             .returning()
 
-          // For each challenge, insert challenge options
           for (const challenge of challenges) {
+            const languageCode = course.imageSrc.split('.')[0].slice(1)
+            const translations = getTranslations(languageCode)
+
             if (challenge.order === 1) {
               await db.insert(schema.challengeOptions).values([
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "el hombre",
+                  text: translations.man,
                   imageSrc: "/man.svg",
-                  audioSrc: "/es_man.mp3",
+                  audioSrc: `/${languageCode}_man.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "la mujer",
+                  text: translations.woman,
                   imageSrc: "/woman.svg",
-                  audioSrc: "/es_woman.mp3",
+                  audioSrc: `/${languageCode}_woman.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el chico",
+                  text: translations.boy,
                   imageSrc: "/boy.svg",
-                  audioSrc: "/es_boy.mp3",
+                  audioSrc: `/${languageCode}_boy.mp3`,
                 },
               ])
             }
@@ -150,23 +155,23 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "la mujer",
+                  text: translations.woman,
                   imageSrc: "/woman.svg",
-                  audioSrc: "/es_woman.mp3",
+                  audioSrc: `/${languageCode}_woman.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el chico",
+                  text: translations.boy,
                   imageSrc: "/boy.svg",
-                  audioSrc: "/es_boy.mp3",
+                  audioSrc: `/${languageCode}_boy.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el hombre",
+                  text: translations.man,
                   imageSrc: "/man.svg",
-                  audioSrc: "/es_man.mp3",
+                  audioSrc: `/${languageCode}_man.mp3`,
                 },
               ])
             }
@@ -176,23 +181,23 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "la mujer",
+                  text: translations.woman,
                   imageSrc: "/woman.svg",
-                  audioSrc: "/es_woman.mp3",
+                  audioSrc: `/${languageCode}_woman.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el hombre",
+                  text: translations.man,
                   imageSrc: "/man.svg",
-                  audioSrc: "/es_man.mp3",
+                  audioSrc: `/${languageCode}_man.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "el chico",
+                  text: translations.boy,
                   imageSrc: "/boy.svg",
-                  audioSrc: "/es_boy.mp3",
+                  audioSrc: `/${languageCode}_boy.mp3`,
                 },
               ])
             }
@@ -202,20 +207,20 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "la mujer",
-                  audioSrc: "/es_woman.mp3",
+                  text: translations.woman,
+                  audioSrc: `/${languageCode}_woman.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "el hombre",
-                  audioSrc: "/es_man.mp3",
+                  text: translations.man,
+                  audioSrc: `/${languageCode}_man.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el chico",
-                  audioSrc: "/es_boy.mp3",
+                  text: translations.boy,
+                  audioSrc: `/${languageCode}_boy.mp3`,
                 },
               ])
             }
@@ -225,23 +230,23 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el hombre",
+                  text: translations.man,
                   imageSrc: "/man.svg",
-                  audioSrc: "/es_man.mp3",
+                  audioSrc: `/${languageCode}_man.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "la mujer",
+                  text: translations.woman,
                   imageSrc: "/woman.svg",
-                  audioSrc: "/es_woman.mp3",
+                  audioSrc: `/${languageCode}_woman.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "el zombie",
+                  text: translations.zombie,
                   imageSrc: "/zombie.svg",
-                  audioSrc: "/es_zombie.mp3",
+                  audioSrc: `/${languageCode}_zombie.mp3`,
                 },
               ])
             }
@@ -251,23 +256,23 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "el robot",
+                  text: translations.robot,
                   imageSrc: "/robot.svg",
-                  audioSrc: "/es_robot.mp3",
+                  audioSrc: `/${languageCode}_robot.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el zombie",
+                  text: translations.zombie,
                   imageSrc: "/zombie.svg",
-                  audioSrc: "/es_zombie.mp3",
+                  audioSrc: `/${languageCode}_zombie.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el chico",
+                  text: translations.boy,
                   imageSrc: "/boy.svg",
-                  audioSrc: "/es_boy.mp3",
+                  audioSrc: `/${languageCode}_boy.mp3`,
                 },
               ])
             }
@@ -277,23 +282,23 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "la nina",
+                  text: translations.girl,
                   imageSrc: "/girl.svg",
-                  audioSrc: "/es_girl.mp3",
+                  audioSrc: `/${languageCode}_girl.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el zombie",
+                  text: translations.zombie,
                   imageSrc: "/zombie.svg",
-                  audioSrc: "/es_zombie.mp3",
+                  audioSrc: `/${languageCode}_zombie.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el hombre",
+                  text: translations.man,
                   imageSrc: "/man.svg",
-                  audioSrc: "/es_man.mp3",
+                  audioSrc: `/${languageCode}_man.mp3`,
                 },
               ])
             }
@@ -303,20 +308,20 @@ const main = async () => {
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "la mujer",
-                  audioSrc: "/es_woman.mp3",
+                  text: translations.woman,
+                  audioSrc: `/${languageCode}_woman.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: true,
-                  text: "el zombie",
-                  audioSrc: "/es_zombie.mp3",
+                  text: translations.zombie,
+                  audioSrc: `/${languageCode}_zombie.mp3`,
                 },
                 {
                   challengeId: challenge.id,
                   correct: false,
-                  text: "el chico",
-                  audioSrc: "/es_boy.mp3",
+                  text: translations.boy,
+                  audioSrc: `/${languageCode}_boy.mp3`,
                 },
               ])
             }
@@ -329,6 +334,52 @@ const main = async () => {
     console.error(error)
     throw new Error("Failed to seed database")
   }
+}
+
+const getTranslations = (languageCode: string) => {
+  const translations = {
+    es: {
+      man: "el hombre",
+      woman: "la mujer",
+      boy: "el chico",
+      girl: "la niña",
+      zombie: "el zombie",
+      robot: "el robot",
+    },
+    it: {
+      man: "l'uomo",
+      woman: "la donna",
+      boy: "il ragazzo",
+      girl: "la ragazza",
+      zombie: "lo zombie",
+      robot: "il robot",
+    },
+    fr: {
+      man: "l'homme",
+      woman: "la femme",
+      boy: "le garçon",
+      girl: "la fille",
+      zombie: "le zombie",
+      robot: "le robot",
+    },
+    hr: {
+      man: "muškarac",
+      woman: "žena",
+      boy: "dječak",
+      girl: "djevojčica",
+      zombie: "zombi",
+      robot: "robot",
+    },
+    jp: {
+      man: "男の人",
+      woman: "女の人",
+      boy: "男の子",
+      girl: "女の子",
+      zombie: "ゾンビ",
+      robot: "ロボット",
+    },
+  }
+  return translations[languageCode as keyof typeof translations]
 }
 
 main()
