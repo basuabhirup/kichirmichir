@@ -10,7 +10,7 @@ This project is a clone of the popular language-learning app Duolingo, built wit
 
 #### Demo Video: http://www.youtube.com/watch?v=eG07ISE_TDc
 
-[![Demo Video](http://img.youtube.com/vi/eG07ISE_TDc/0.jpg)](http://www.youtube.com/watch?v=eG07ISE_TDc "Demo")
+https://github.com/user-attachments/assets/c2328f45-33b3-4fc7-8900-ef65a6172b17
 
 ## 🚀 Features
 
@@ -33,6 +33,7 @@ This project is a clone of the popular language-learning app Duolingo, built wit
 ## 🛤 Future Plans
 
 Kichirmichir aims to go beyond language learning. We plan to introduce various challenges and expand the course offerings to transform it into a versatile quiz and for-fun app.
+
 
 ## 📚 Getting Started
 
