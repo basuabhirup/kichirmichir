@@ -40,11 +40,6 @@ export const main = async () => {
         title: "Croatian",
         imageSrc: "/hr.svg",
       },
-      {
-        id: 5,
-        title: "Japanese",
-        imageSrc: "/jp.svg",
-      },
     ])
 
     await db.insert(schema.units).values([

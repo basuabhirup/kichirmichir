@@ -30,7 +30,6 @@ const main = async () => {
         { id: 2, title: "Italian", imageSrc: "/it.svg" },
         { id: 3, title: "French", imageSrc: "/fr.svg" },
         { id: 4, title: "Croatian", imageSrc: "/hr.svg" },
-        { id: 5, title: "Japanese", imageSrc: "/jp.svg" },
       ])
       .returning()
 
@@ -121,7 +120,7 @@ const main = async () => {
             .returning()
 
           for (const challenge of challenges) {
-            const languageCode = course.imageSrc.split('.')[0].slice(1)
+            const languageCode = course.imageSrc.split(".")[0].slice(1)
             const translations = getTranslations(languageCode)
 
             if (challenge.order === 1) {
@@ -369,14 +368,6 @@ const getTranslations = (languageCode: string) => {
       girl: "djevojčica",
       zombie: "zombi",
       robot: "robot",
-    },
-    jp: {
-      man: "男の人",
-      woman: "女の人",
-      boy: "男の子",
-      girl: "女の子",
-      zombie: "ゾンビ",
-      robot: "ロボット",
     },
   }
   return translations[languageCode as keyof typeof translations]
