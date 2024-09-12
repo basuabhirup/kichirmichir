@@ -105,6 +105,8 @@ export const Quiz: React.FC<IProps> = ({
     }
 
     if (correctOption.id === selectedOption) {
+      correctControls.play()
+      setStatus("correct")
       startTransition(() => {
         upsertChallengeProgress(challenge.id)
           .then((res) => {
@@ -112,17 +114,20 @@ export const Quiz: React.FC<IProps> = ({
               openHeartsModal()
               return
             }
-            correctControls.play()
-            setStatus("correct")
             setPercentage((prev) => prev + 100 / challenges.length)
             if (initialPercentage === 100) {
               // This is a practice
               setHearts((prev) => Math.min(prev + 1, 5))
             }
           })
-          .catch(() => toast.error("Oops! Something went wrong"))
+          .catch(() => {
+            toast.error("Oops! Something went wrong")
+            setStatus("none")
+          })
       })
     } else {
+      incorrectControls.play()
+      setStatus("wrong")
       startTransition(() => {
         reduceHearts(challenge.id)
           .then((res) => {
@@ -130,15 +135,16 @@ export const Quiz: React.FC<IProps> = ({
               openHeartsModal()
               return
             }
-            incorrectControls.play()
-            setStatus("wrong")
 
             if (!res?.error) {
               // This is not a practice
               setHearts((prev) => Math.max(prev - 1, 0))
             }
           })
-          .catch(() => toast.error("Oops! Something went wrong"))
+          .catch(() => {
+            toast.error("Oops! Something went wrong")
+            setStatus("none")
+          })
       })
     }
   }

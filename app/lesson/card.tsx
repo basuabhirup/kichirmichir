@@ -32,11 +32,11 @@ export const Card: React.FC<IProps> = ({
   const [audio, _, controls] = useAudio({ src: audioSrc || "" })
 
   const handleClick = useCallback(() => {
-    if (disabled) return
+    if (disabled || status !== "none") return
 
     controls.play()
     onClick()
-  }, [disabled, onClick, controls])
+  }, [disabled, status, controls, onClick])
 
   useKey(shortcut, handleClick, {}, [handleClick])
 
